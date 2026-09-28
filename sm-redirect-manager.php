@@ -1,7 +1,6 @@
 <?php
 /**
  * Plugin Name:       SM Redirect Manager
- * Plugin URI:        https://seomarketeer.eu
  * Description:       Advanced redirect management, auto-slug tracking, and 404 monitoring.
  * Version:           1.0.0
  * Requires at least: 6.0
