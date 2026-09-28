@@ -22,7 +22,7 @@ defined( 'ABSPATH' ) || exit;
 
 final class RedirectEngine implements HookableInterface {
 
-	public const X_REDIRECT_BY = 'SM Redirect Manager';
+	public const X_REDIRECT_BY = 'SEOmarketeer Redirect Manager';
 
 	/** Maximum internal hops simulated when checking for redirect loops. */
 	public const MAX_CHAIN_DEPTH = 10;

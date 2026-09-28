@@ -1,5 +1,5 @@
 /**
- * SM Redirect Manager – admin interactions (vanilla JS, no dependencies).
+ * SEOmarketeer Redirect Manager – admin interactions (vanilla JS, no dependencies).
  *
  * Every request carries the AJAX nonce localised as smRedirectManager.nonce;
  * capability and nonce are re-checked server-side.

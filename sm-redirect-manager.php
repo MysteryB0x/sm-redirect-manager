@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name:       SM Redirect Manager
+ * Plugin Name:       SEOmarketeer Redirect Manager
  * Description:       Advanced redirect management, auto-slug tracking, and 404 monitoring.
  * Version:           1.0.0
  * Requires at least: 6.0
@@ -42,7 +42,7 @@ if ( version_compare( PHP_VERSION, SM_REDIRECT_MANAGER_MIN_PHP, '<' ) ) {
 				esc_html(
 					sprintf(
 						/* translators: 1: required PHP version, 2: current PHP version. */
-						__( 'SM Redirect Manager requires PHP %1$s or higher. You are running PHP %2$s.', 'sm-redirect-manager' ),
+						__( 'SEOmarketeer Redirect Manager requires PHP %1$s or higher. You are running PHP %2$s.', 'sm-redirect-manager' ),
 						SM_REDIRECT_MANAGER_MIN_PHP,
 						PHP_VERSION
 					)

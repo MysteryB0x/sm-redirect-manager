@@ -1,4 +1,4 @@
-# SM Redirect Manager
+# SEOmarketeer Redirect Manager
 
 Advanced redirect management, auto-slug tracking, and 404 monitoring for WordPress — by [SEOmarketeer](https://seomarketeer.eu).
 

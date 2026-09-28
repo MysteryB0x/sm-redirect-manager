@@ -87,7 +87,7 @@ final class AdminController implements HookableInterface {
 	public function registerMenu(): void {
 		$hook = add_submenu_page(
 			'tools.php',
-			__( 'SM Redirect Manager', 'sm-redirect-manager' ),
+			__( 'SEOmarketeer Redirect Manager', 'sm-redirect-manager' ),
 			__( 'Redirect Manager', 'sm-redirect-manager' ),
 			self::CAPABILITY,
 			self::PAGE_SLUG,
@@ -195,7 +195,7 @@ final class AdminController implements HookableInterface {
 		$view = $this->currentView();
 
 		echo '<div class="wrap sm-rm-wrap">';
-		echo '<h1 class="wp-heading-inline">' . esc_html__( 'SM Redirect Manager', 'sm-redirect-manager' ) . '</h1>';
+		echo '<h1 class="wp-heading-inline">' . esc_html__( 'SEOmarketeer Redirect Manager', 'sm-redirect-manager' ) . '</h1>';
 
 		if ( 'redirects' === $tab && '' === $view ) {
 			printf(

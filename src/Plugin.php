@@ -88,7 +88,7 @@ final class Plugin {
 		add_filter( 'wpmu_drop_tables', array( Installer::class, 'filterDropTables' ), 10, 2 );
 
 		/**
-		 * Fires once all SM Redirect Manager services are registered.
+		 * Fires once all SEOmarketeer Redirect Manager services are registered.
 		 *
 		 * @param Plugin $plugin
 		 */

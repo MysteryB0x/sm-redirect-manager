@@ -1,4 +1,4 @@
-=== SM Redirect Manager ===
+=== SEOmarketeer Redirect Manager ===
 Contributors: seomarketeer
 Tags: redirect, 301, 404, seo, csv
 Requires at least: 6.0
