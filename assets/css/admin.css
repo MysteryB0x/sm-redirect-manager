@@ -12,12 +12,30 @@
 	word-break: break-all;
 }
 
-.sm-rm-wrap .column-url_from { width: 28%; }
-.sm-rm-wrap .column-url_to { width: 24%; }
-.sm-rm-wrap .column-action_code,
+/* Redirects table */
+.sm-rm-wrap .column-url_from { width: 24%; }
+.sm-rm-wrap .column-url_to { width: 20%; }
+.sm-rm-wrap .column-action_code { width: 76px; }
+.sm-rm-wrap .column-match_type { width: 11%; }
+.sm-rm-wrap .column-query_strategy { width: 12%; }
 .sm-rm-wrap .column-hits,
-.sm-rm-wrap .column-hit_count { width: 70px; }
-.sm-rm-wrap .column-status { width: 90px; }
+.sm-rm-wrap .column-hit_count { width: 64px; }
+.sm-rm-wrap .column-status { width: 88px; }
+.sm-rm-wrap .column-last_accessed { width: 13%; }
+
+/* 404 log table */
+.sm-rm-wrap .column-url { width: 26%; }
+.sm-rm-wrap .column-referrer,
+.sm-rm-wrap .column-user_agent { width: 17%; }
+.sm-rm-wrap .column-ip_address { width: 100px; }
+.sm-rm-wrap .column-created_at,
+.sm-rm-wrap .column-last_seen { width: 12%; }
+
+.sm-rm-wrap td,
+.sm-rm-wrap th {
+	overflow-wrap: normal;
+	word-break: normal;
+}
 
 .sm-rm-status {
 	display: inline-block;
@@ -52,8 +70,8 @@
 }
 
 .sm-rm-truncate {
-	display: inline-block;
-	max-width: 260px;
+	display: block;
+	max-width: 100%;
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

@@ -1,0 +1,47 @@
+name: Update WordPress.org assets & readme
+
+# Pushes banner/icon/screenshot changes in .wordpress-org/ and readme.txt edits
+# to WordPress.org without a new plugin version. Skipped when the current
+# version is not released yet: the Deploy workflow then publishes everything.
+on:
+  push:
+    branches: [main]
+    paths:
+      - .wordpress-org/**
+      - readme.txt
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: wporg-deploy
+  cancel-in-progress: false
+
+jobs:
+  assets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Only when the current version is already released
+        id: check
+        run: |
+          VERSION=$(grep -m1 -E '^Stable tag:' readme.txt | awk '{print $NF}')
+          if git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null; then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version $VERSION not released yet; the Deploy workflow will publish assets."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Update assets and readme on WordPress.org
+        if: steps.check.outputs.run == 'true'
+        uses: 10up/action-wordpress-plugin-asset-update@stable
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: sm-redirect-manager
+          IGNORE_OTHER_FILES: true

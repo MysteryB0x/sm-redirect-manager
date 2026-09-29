@@ -4,7 +4,7 @@ Tags: redirect, 301, 404, seo, csv
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -24,6 +24,20 @@ Advanced redirect management, auto-slug tracking, and 404 monitoring.
 
 Admin: Tools → Redirect Manager.
 
+== Installation ==
+
+1. Install the plugin from Plugins → Add New (search for "SEOmarketeer Redirect Manager"), or upload the zip.
+2. Activate it. Database tables are created automatically.
+3. Go to Tools → Redirect Manager and add your first redirect with the Quick Add bar.
+
+== Screenshots ==
+
+1. Quick Add: type a source and target and press Enter. Wildcards and regexes are detected automatically.
+2. 404 log with hit counts, referrers and one-click "Convert to redirect".
+3. Full redirect editor: match type, HTTP status, query-parameter strategy and status.
+4. CSV import and export (comma, semicolon or tab; Excel-safe).
+5. Settings: slug tracking, 404 logging, GDPR IP anonymisation and log retention.
+
 == Theme templates ==
 
 Place `410.php` or `451.php` in your theme to render a custom page for those status codes.
@@ -39,5 +53,14 @@ Actions: `sm_redirect_manager_booted`, `sm_redirect_manager_loop_detected`, `sm_
 
 == Changelog ==
 
+= 1.0.1 =
+* Fixed: long referrers and user agents in the 404 log no longer overlap neighbouring columns.
+* Improved: column widths in the redirects and 404 tables.
+
 = 1.0.0 =
 * Initial release.
+
+== Upgrade Notice ==
+
+= 1.0.1 =
+Layout fixes for the 404 log and redirects tables.

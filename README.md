@@ -28,7 +28,7 @@ assets/                   admin JS/CSS
 ```
 
 CI runs PHP 8.1–8.4 syntax checks and the official WordPress Plugin Check on every push.
-Bumping the version (header, constant and readme Stable tag) on `main` deploys to WordPress.org and creates the tag + GitHub Release (see `.github/workflows/deploy.yml`).
+Bumping the version (header, constant and readme Stable tag) on `main` deploys to WordPress.org and creates the tag + GitHub Release. Changes to `.wordpress-org/` (banner, icon, screenshots) or `readme.txt` alone update the WordPress.org page without a release (see `.github/workflows/deploy.yml`).
 
 ## License
 
