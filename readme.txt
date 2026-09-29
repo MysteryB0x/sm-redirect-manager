@@ -4,7 +4,7 @@ Tags: redirect, 301, 404, seo, csv
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -53,6 +53,9 @@ Actions: `sm_redirect_manager_booted`, `sm_redirect_manager_loop_detected`, `sm_
 
 == Changelog ==
 
+= 1.0.2 =
+* Packaging: removed stray build files that were accidentally included in the 1.0.0 and 1.0.1 packages. No functional changes.
+
 = 1.0.1 =
 * Fixed: long referrers and user agents in the 404 log no longer overlap neighbouring columns.
 * Improved: column widths in the redirects and 404 tables.
@@ -61,6 +64,9 @@ Actions: `sm_redirect_manager_booted`, `sm_redirect_manager_loop_detected`, `sm_
 * Initial release.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Smaller, clean package. No functional changes.
 
 = 1.0.1 =
 Layout fixes for the 404 log and redirects tables.

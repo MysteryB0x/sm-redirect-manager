@@ -31,9 +31,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build plugin (apply .distignore)
         run: |
-          mkdir -p build/sm-redirect-manager
-          rsync -a --exclude-from=.distignore ./ build/sm-redirect-manager/
+          mkdir -p "$RUNNER_TEMP/build/sm-redirect-manager"
+          rsync -a --exclude-from=.distignore ./ "$RUNNER_TEMP/build/sm-redirect-manager/"
       - uses: WordPress/plugin-check-action@v1
         with:
-          build-dir: ./build/sm-redirect-manager
+          build-dir: ${{ runner.temp }}/build/sm-redirect-manager
           include-experimental: true

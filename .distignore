@@ -7,3 +7,8 @@
 .distignore
 .gitattributes
 README.md
+/build
+/vendor
+.wp-env.json
+.wp-env.override.json
+composer.lock

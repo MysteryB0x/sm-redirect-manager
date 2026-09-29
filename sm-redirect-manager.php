@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       SEOmarketeer Redirect Manager
  * Description:       Advanced redirect management, auto-slug tracking, and 404 monitoring.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Requires at least: 6.0
  * Requires PHP:      8.1
  * Author:            SEOmarketeer
@@ -22,7 +22,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'SM_REDIRECT_MANAGER_VERSION', '1.0.1' );
+define( 'SM_REDIRECT_MANAGER_VERSION', '1.0.2' );
 define( 'SM_REDIRECT_MANAGER_DB_VERSION', '1.0.0' );
 define( 'SM_REDIRECT_MANAGER_MIN_PHP', '8.1' );
 define( 'SM_REDIRECT_MANAGER_FILE', __FILE__ );

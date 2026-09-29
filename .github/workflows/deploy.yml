@@ -60,18 +60,25 @@ jobs:
             echo "release=true" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Build plugin (apply .distignore)
+      - name: Build plugin outside the workspace (apply .distignore)
         if: steps.version.outputs.release == 'true'
         run: |
-          mkdir -p build/sm-redirect-manager
-          rsync -a --exclude-from=.distignore ./ build/sm-redirect-manager/
+          mkdir -p "$RUNNER_TEMP/build/sm-redirect-manager"
+          rsync -a --exclude-from=.distignore ./ "$RUNNER_TEMP/build/sm-redirect-manager/"
 
       - name: Plugin Check
         if: steps.version.outputs.release == 'true'
         uses: WordPress/plugin-check-action@v1
         with:
-          build-dir: ./build/sm-redirect-manager
+          build-dir: ${{ runner.temp }}/build/sm-redirect-manager
           include-experimental: true
+
+      - name: Reset workspace to the committed files only
+        if: steps.version.outputs.release == 'true'
+        run: |
+          git clean -fdx
+          git status --porcelain
+          test -z "$(git status --porcelain)" || { echo "::error::Workspace not clean before deploy"; exit 1; }
 
       - name: Deploy to WordPress.org SVN
         if: steps.version.outputs.release == 'true'
