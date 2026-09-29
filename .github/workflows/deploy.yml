@@ -1,17 +1,26 @@
 name: Deploy to WordPress.org
 
-# Push a version tag (e.g. "1.0.1") to release:
-#   1. verifies the tag matches the plugin header Version and readme "Stable tag"
-#   2. runs Plugin Check on the build
-#   3. commits trunk + tags/<version> (+ .wordpress-org assets) to WordPress.org SVN
-#   4. creates the GitHub Release with the installable zip attached
+# Releases automatically when main contains a version that has no git tag yet
+# (bump Version, SM_REDIRECT_MANAGER_VERSION and "Stable tag" together), or when
+# a version tag is pushed, or when run manually from the Actions tab:
+#   1. verifies plugin header Version, constant and readme "Stable tag" match
+#   2. skips if that version is already released
+#   3. runs Plugin Check on the build
+#   4. commits trunk + tags/<version> (+ .wordpress-org assets) to WordPress.org SVN
+#   5. creates the git tag + GitHub Release with the installable zip attached
 #
 # Requires repository secrets SVN_USERNAME and SVN_PASSWORD
 # (WordPress.org username + the SVN password from your profile's Account & Security page).
 on:
   push:
+    branches: [main]
+    paths:
+      - sm-redirect-manager.php
+      - readme.txt
+      - .github/workflows/deploy.yml
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -25,31 +34,47 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Verify version numbers match the tag
+      - name: Read and verify version
+        id: version
         run: |
-          TAG="${GITHUB_REF_NAME}"
           HEADER=$(grep -m1 -E '^\s*\*\s*Version:' sm-redirect-manager.php | awk '{print $NF}')
           STABLE=$(grep -m1 -E '^Stable tag:' readme.txt | awk '{print $NF}')
           CONST=$(grep -m1 "SM_REDIRECT_MANAGER_VERSION'" sm-redirect-manager.php | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
-          echo "tag=$TAG header=$HEADER stable=$STABLE constant=$CONST"
-          if [ "$TAG" != "$HEADER" ] || [ "$TAG" != "$STABLE" ] || [ "$TAG" != "$CONST" ]; then
-            echo "::error::Tag, plugin header Version, readme Stable tag and SM_REDIRECT_MANAGER_VERSION must all match."
+          echo "header=$HEADER stable=$STABLE constant=$CONST ref=$GITHUB_REF_NAME"
+          if [ "$HEADER" != "$STABLE" ] || [ "$HEADER" != "$CONST" ]; then
+            echo "::error::Plugin header Version, readme Stable tag and SM_REDIRECT_MANAGER_VERSION must all match."
             exit 1
+          fi
+          if [ "$GITHUB_REF_TYPE" = "tag" ] && [ "$GITHUB_REF_NAME" != "$HEADER" ]; then
+            echo "::error::Tag $GITHUB_REF_NAME does not match plugin version $HEADER."
+            exit 1
+          fi
+          echo "version=$HEADER" >> "$GITHUB_OUTPUT"
+          if [ "$GITHUB_REF_TYPE" != "tag" ] && git rev-parse -q --verify "refs/tags/$HEADER" >/dev/null; then
+            echo "Version $HEADER is already released; nothing to deploy."
+            echo "release=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "release=true" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Build plugin (apply .distignore)
+        if: steps.version.outputs.release == 'true'
         run: |
           mkdir -p build/sm-redirect-manager
           rsync -a --exclude-from=.distignore ./ build/sm-redirect-manager/
 
       - name: Plugin Check
+        if: steps.version.outputs.release == 'true'
         uses: WordPress/plugin-check-action@v1
         with:
           build-dir: ./build/sm-redirect-manager
           include-experimental: true
 
       - name: Deploy to WordPress.org SVN
+        if: steps.version.outputs.release == 'true'
         id: deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
         with:
@@ -58,10 +83,14 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: sm-redirect-manager
+          VERSION: ${{ steps.version.outputs.version }}
 
-      - name: Create GitHub Release with zip
+      - name: Create git tag + GitHub Release with zip
+        if: steps.version.outputs.release == 'true'
         uses: softprops/action-gh-release@v2
         with:
-          name: ${{ github.ref_name }}
+          tag_name: ${{ steps.version.outputs.version }}
+          target_commitish: ${{ github.sha }}
+          name: ${{ steps.version.outputs.version }}
           generate_release_notes: true
           files: ${{ steps.deploy.outputs.zip-path }}

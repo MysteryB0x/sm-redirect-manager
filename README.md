@@ -28,7 +28,7 @@ assets/                   admin JS/CSS
 ```
 
 CI runs PHP 8.1–8.4 syntax checks and the official WordPress Plugin Check on every push.
-Pushing a version tag (e.g. `1.0.1`) deploys to WordPress.org and creates the GitHub Release (see `.github/workflows/deploy.yml`).
+Bumping the version (header, constant and readme Stable tag) on `main` deploys to WordPress.org and creates the tag + GitHub Release (see `.github/workflows/deploy.yml`).
 
 ## License
 
