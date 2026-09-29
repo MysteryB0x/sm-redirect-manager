@@ -1,20 +1,54 @@
 name: Deploy to WordPress.org
 
-# Runs when a GitHub Release is published (tag must match "Stable tag" in readme.txt).
-# Requires repository secrets SVN_USERNAME and SVN_PASSWORD (your WordPress.org account),
-# and only works after the plugin has been approved on WordPress.org.
+# Push a version tag (e.g. "1.0.1") to release:
+#   1. verifies the tag matches the plugin header Version and readme "Stable tag"
+#   2. runs Plugin Check on the build
+#   3. commits trunk + tags/<version> (+ .wordpress-org assets) to WordPress.org SVN
+#   4. creates the GitHub Release with the installable zip attached
+#
+# Requires repository secrets SVN_USERNAME and SVN_PASSWORD
+# (WordPress.org username + the SVN password from your profile's Account & Security page).
 on:
-  release:
-    types: [published]
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: write
+
+concurrency:
+  group: wporg-deploy
+  cancel-in-progress: false
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Verify version numbers match the tag
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          HEADER=$(grep -m1 -E '^\s*\*\s*Version:' sm-redirect-manager.php | awk '{print $NF}')
+          STABLE=$(grep -m1 -E '^Stable tag:' readme.txt | awk '{print $NF}')
+          CONST=$(grep -m1 "SM_REDIRECT_MANAGER_VERSION'" sm-redirect-manager.php | grep -oE "[0-9]+\.[0-9]+\.[0-9]+")
+          echo "tag=$TAG header=$HEADER stable=$STABLE constant=$CONST"
+          if [ "$TAG" != "$HEADER" ] || [ "$TAG" != "$STABLE" ] || [ "$TAG" != "$CONST" ]; then
+            echo "::error::Tag, plugin header Version, readme Stable tag and SM_REDIRECT_MANAGER_VERSION must all match."
+            exit 1
+          fi
+
+      - name: Build plugin (apply .distignore)
+        run: |
+          mkdir -p build/sm-redirect-manager
+          rsync -a --exclude-from=.distignore ./ build/sm-redirect-manager/
+
+      - name: Plugin Check
+        uses: WordPress/plugin-check-action@v1
+        with:
+          build-dir: ./build/sm-redirect-manager
+          include-experimental: true
+
       - name: Deploy to WordPress.org SVN
         id: deploy
         uses: 10up/action-wordpress-plugin-deploy@stable
@@ -24,7 +58,10 @@ jobs:
           SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: sm-redirect-manager
-      - name: Attach zip to the GitHub release
+
+      - name: Create GitHub Release with zip
         uses: softprops/action-gh-release@v2
         with:
+          name: ${{ github.ref_name }}
+          generate_release_notes: true
           files: ${{ steps.deploy.outputs.zip-path }}

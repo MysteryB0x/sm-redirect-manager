@@ -1,6 +1,6 @@
 # SEOmarketeer Redirect Manager
 
-Advanced redirect management, auto-slug tracking, and 404 monitoring for WordPress — by [SEOmarketeer](https://seomarketeer.eu).
+[WordPress.org](https://wordpress.org/plugins/sm-redirect-manager/) · Advanced redirect management, auto-slug tracking, and 404 monitoring for WordPress — by [SEOmarketeer](https://seomarketeer.eu).
 
 ![CI](../../actions/workflows/ci.yml/badge.svg)
 
@@ -28,7 +28,7 @@ assets/                   admin JS/CSS
 ```
 
 CI runs PHP 8.1–8.4 syntax checks and the official WordPress Plugin Check on every push.
-Publishing a GitHub Release deploys to WordPress.org (see `.github/workflows/deploy.yml`).
+Pushing a version tag (e.g. `1.0.1`) deploys to WordPress.org and creates the GitHub Release (see `.github/workflows/deploy.yml`).
 
 ## License
 
